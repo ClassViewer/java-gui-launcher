@@ -1,0 +1,31 @@
+#cmakedefine APP_ICON_PATH "@APP_ICON_PATH@"
+
+#ifdef APP_ICON_PATH
+    IDI_ICON1   ICON    APP_ICON_PATH
+#endif
+
+1 VERSIONINFO
+FILEVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,0,0
+PRODUCTVERSION @APP_VERSION_MAJOR@,@APP_VERSION_MINOR@,@APP_VERSION_PATCH@,@APP_VERSION_TWEAK@
+FILEOS 0x4
+FILETYPE 0x1
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904E4"
+        {
+            VALUE "CompanyName", "@APP_ORG@"
+            VALUE "FileDescription", "@APP_NAME@ launcher"
+            VALUE "FileVersion", "@PROJECT_VERSION@"
+            VALUE "InternalName", "Launcher"
+            VALUE "LegalCopyright", "Copyright 2019 Glavo. All rights reserved."
+            VALUE "OriginalFilename", "@APP_NAME@.exe"
+            VALUE "ProductName", "@APP_NAME@"
+            VALUE "ProductVersion", "@APP_VERSION@"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0409 0x04E4
+    }
+}
