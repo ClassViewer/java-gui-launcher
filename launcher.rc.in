@@ -1,4 +1,5 @@
 #cmakedefine APP_ICON_PATH "@APP_ICON_PATH@"
+#cmakedefine APP_COPYRIGHT "@APP_COPYRIGHT@"
 
 #ifdef APP_ICON_PATH
     IDI_ICON1   ICON    APP_ICON_PATH
@@ -15,11 +16,13 @@ FILETYPE 0x1
         BLOCK "040904E4"
         {
             VALUE "CompanyName", "@APP_ORG@"
-            VALUE "FileDescription", "@APP_NAME@ launcher"
+            VALUE "FileDescription", "@APP_NAME@"
             VALUE "FileVersion", "@PROJECT_VERSION@"
             VALUE "InternalName", "Launcher"
-            VALUE "LegalCopyright", "Copyright 2019 Glavo. All rights reserved."
-            VALUE "OriginalFilename", "@APP_NAME@.exe"
+#ifdef APP_COPYRIGHT
+            VALUE "LegalCopyright", APP_COPYRIGHT
+#endif
+            VALUE "OriginalFilename", "@APP_EXE_NAME@.exe"
             VALUE "ProductName", "@APP_NAME@"
             VALUE "ProductVersion", "@APP_VERSION@"
         }

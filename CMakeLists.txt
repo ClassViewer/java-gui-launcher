@@ -4,6 +4,10 @@ if (NOT DEFINED APP_NAME)
     message(FATAL_ERROR "Application name has not been defined")
 endif ()
 
+if (NOT DEFINED APP_EXE_NAME)
+    set(APP_EXE_NAME ${APP_NAME})
+endif ()
+
 if (NOT DEFINED APP_VERSION)
     message(FATAL_ERROR "Application version number has not been defined")
 endif ()
@@ -33,6 +37,23 @@ if (DEFINED APP_ICON)
     string(REPLACE "\\" "\\\\" APP_ICON_PATH ${_APP_ICON_PATH})
 endif ()
 
+if (NOT DEFINED APP_JRE_PATH)
+    set(APP_JRE_PATH "..")
+else ()
+    if (APP_JRE_PATH MATCHES "(.*)\\$")
+        set(APP_JRE_PATH ${CMAKE_MATCH_1})
+    endif ()
+    string(REPLACE "\\" "\\\\" APP_JRE_PATH ${APP_JRE_PATH})
+    string(REPLACE "\"" "\\\"" APP_JRE_PATH ${APP_JRE_PATH})
+endif ()
+
+if (NOT DEFINED APP_COPYRIGHT AND DEFINED APP_COPYRIGHT_OWNER)
+    set(APP_COPYRIGHT "Copyright 2020 ${APP_COPYRIGHT_OWNER}. All rights reserved.")
+endif ()
+
+if (DEFINED APP_SHOW_CONSOLE)
+endif ()
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
 project(launcher
@@ -60,10 +81,10 @@ if (WIN32 AND MSVC)
             ${CMAKE_CURRENT_BINARY_DIR}/launcher.rc
             @ONLY
     )
-    add_executable(${APP_NAME} launcher_win_main.c ${CMAKE_CURRENT_BINARY_DIR}/launcher.rc ${CMAKE_CURRENT_BINARY_DIR}/launcher_config.h launcher.h launcher_win.h launcher_win.c)
-    target_link_libraries(${APP_NAME} pathcch)
+    add_executable(${APP_EXE_NAME} launcher_win_main.c ${CMAKE_CURRENT_BINARY_DIR}/launcher.rc ${CMAKE_CURRENT_BINARY_DIR}/launcher_config.h launcher.h launcher_win.h launcher_win.c launcher.c)
+    target_link_libraries(${APP_EXE_NAME} pathcch)
     if (NOT DEFINED APP_SHOW_CONSOLE)
-        set_property(TARGET ${APP_NAME} PROPERTY WIN32_EXECUTABLE true)
+        set_property(TARGET ${APP_EXE_NAME} PROPERTY WIN32_EXECUTABLE true)
     else ()
         add_compile_definitions("APPLICATION_SHOW_CONSOLE")
     endif ()

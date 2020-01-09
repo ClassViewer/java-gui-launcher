@@ -10,8 +10,6 @@
 
 const char APPLICATION_PREDEF_VM_OPTIONS[] = APPLICATION_PREDEF_OPTIONS;
 
-JavaVM *vm = NULL;
-JNIEnv *env = NULL;
 CMD cmd;
 
 void parseCMD() {
@@ -112,7 +110,7 @@ HMODULE loadJVM() {
     WCHAR *buffer = calloc(MAX_LONG_PATH_SIZE, sizeof(WCHAR));
     if (GetModuleFileNameW(NULL, buffer, MAX_LONG_PATH_SIZE)) {
         PathCchRemoveFileSpec(buffer, MAX_LONG_PATH_SIZE);
-        PathCchAppendEx(buffer, MAX_LONG_PATH_SIZE, APPLICATION_JVM_TYPE L"\\jvm.dll", PATHCCH_ALLOW_LONG_PATHS);
+        PathCchAppendEx(buffer, MAX_LONG_PATH_SIZE, APPLICATION_JRE_PATH "\\bin\\" APPLICATION_JVM_TYPE L"\\jvm.dll", PATHCCH_ALLOW_LONG_PATHS);
         HMODULE jvm = LoadLibraryW(buffer);
         free(buffer);
         return jvm;
