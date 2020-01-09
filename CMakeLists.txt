@@ -57,7 +57,7 @@ endif ()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
 project(launcher
-        VERSION 2.0
+        VERSION 2.1
         LANGUAGES C)
 
 include(VersionParser)
