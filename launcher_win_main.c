@@ -45,6 +45,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
         return EXIT_FAILURE;
     }
 
+    parseCMD();
     jobjectArray args = javaArguments();
     ex = (*env)->ExceptionOccurred(env);
     if (args == NULL) {

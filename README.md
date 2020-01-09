@@ -50,3 +50,10 @@ You can customize the generated launcher by passing build options.
 | -DAPP_COPYRIGHT=\<copyright notice\> | application copyright notice |
 | -DAPP_PREDEF_OPTIONS=\<predef vm options\> | predefined VM options, separate multiple options with `;;;`. See [JNI_CreateJavaVM](https://docs.oracle.com/en/java/javase/11/docs/specs/jni/invocation.html#jni_createjavavm), *Standard Options* table |
 
+## Runtime Options
+The launcher accepts arguments starting with `-J` and passes the rest of the content to JVM
+
+Example: 
+```
+.\ClassViewer.exe -J-Xms128m -J-Xmx128m
+```
