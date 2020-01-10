@@ -6,3 +6,7 @@
 
 JavaVM *vm = NULL;
 JNIEnv *env = NULL;
+
+CMD cmd;
+
+LIBRARY_HANDLE libjvm = NULL;

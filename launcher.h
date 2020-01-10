@@ -6,6 +6,7 @@
 #define LAUNCHER_LAUNCHER_H
 
 #include <jni.h>
+#include <launcher_config.h>
 
 
 #ifdef WIN32
@@ -22,18 +23,37 @@ typedef jint (JNICALL *CreateJavaVM_t)(JavaVM **pvm, void **penv, void *args);
 extern JavaVM *vm;
 extern JNIEnv *env;
 
-extern void parseCMD();
+typedef struct _CMD {
+    int nOptions;
+    JavaVMOption *options;
+    int nArguments;
+#ifdef WIN32
+    LPWSTR *arguments;
+#else 
+    const char **arguments;
+#endif
+} CMD;
 
-extern void destructCMD();
+extern CMD cmd;
+
+#ifdef WIN32
+extern void parseCMD(void);
+#else  // WIN32
+extern void parseCMD(int argc, char *argv[]);
+#endif
+
+extern void destructCMD(void);
 
 static inline jclass findClass(const char *name) {
     return (*env)->FindClass(env, name);
 }
 
-extern LIBRARY_HANDLE loadJVM();
+extern LIBRARY_HANDLE libjvm;
 
-extern jint createJVM(LIBRARY_HANDLE);
+extern void loadJVM(void);
 
-extern jobjectArray javaArguments();
+extern jint createJVM(void);
+
+extern jobjectArray javaArguments(void);
 
 #endif //LAUNCHER_LAUNCHER_H

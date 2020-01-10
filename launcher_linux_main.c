@@ -1,15 +1,12 @@
-#include <launcher_config.h>
+//
+// Created by Glavo on 2020.01.10.
+//
+#include <stdlib.h>
 #include "launcher.h"
 
-#ifdef APPLICATION_SHOW_CONSOLE
-int main() {
-#else
-
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
-#endif
+int main(int argc, char *argv[]) {
     loadJVM();
     if (libjvm == NULL) {
-        MessageBoxA(NULL, "Not found " APPLICATION_JRE_PATH "\\bin\\" APPLICATION_JVM_TYPE "\\jvm.dll", NULL, MB_OK);
         return EXIT_FAILURE;
     }
 
@@ -17,7 +14,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     jint ans = createJVM();
 
     if (ans != JNI_OK) {
-        MessageBoxA(NULL, "Create JVM Failed", NULL, MB_OK);
+        fprintf(stderr, "Create JVM failed");
         return ans;
     }
 
@@ -26,7 +23,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     jclass mainClass = findClass(APPLICATION_MAIN_CLASS);
     ex = (*env)->ExceptionOccurred(env);
     if (mainClass == NULL) {
-        MessageBoxA(NULL, "Main class '" APPLICATION_MAIN_CLASS"' not found", NULL, MB_OK);
+        fprintf(stderr, "Main class '" APPLICATION_MAIN_CLASS"' not found");
         return EXIT_FAILURE;
     }
     if (ex != NULL) {
@@ -38,7 +35,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     jmethodID mainMethodID = (*env)->GetStaticMethodID(env, mainClass, "main", "([Ljava/lang/String;)V");
     ex = (*env)->ExceptionOccurred(env);
     if (mainMethodID == NULL) {
-        MessageBoxA(NULL, "Main method not found", NULL, MB_OK);
+        fprintf(stderr, "Main method not found");
         return EXIT_FAILURE;
     }
     if (ex != NULL) {
@@ -46,11 +43,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
         return EXIT_FAILURE;
     }
 
-    parseCMD();
+    parseCMD(argc, argv);
     jobjectArray args = javaArguments();
     ex = (*env)->ExceptionOccurred(env);
     if (args == NULL) {
-        MessageBoxA(NULL, "Failed to initialization arguments", NULL, MB_OK);
+        fprintf(stderr, "Failed to initialization arguments");
         return EXIT_FAILURE;
     }
     if (ex != NULL) {

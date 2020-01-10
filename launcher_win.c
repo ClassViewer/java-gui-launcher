@@ -2,15 +2,13 @@
 // Created by Glavo on 2019.12.27.
 //
 
-#include "launcher_win.h"
+#include "launcher.h"
 #include <pathcch.h>
 #include <strsafe.h>
 
 #define MAX_LONG_PATH_SIZE 32768
 
 const char APPLICATION_PREDEF_VM_OPTIONS[] = APPLICATION_PREDEF_OPTIONS;
-
-CMD cmd;
 
 void parseCMD() {
     int argc;
@@ -106,21 +104,19 @@ void destructCMD() {
     free(arguments);
 }
 
-HMODULE loadJVM() {
+void loadJVM() {
     WCHAR *buffer = calloc(MAX_LONG_PATH_SIZE, sizeof(WCHAR));
     if (GetModuleFileNameW(NULL, buffer, MAX_LONG_PATH_SIZE)) {
         PathCchRemoveFileSpec(buffer, MAX_LONG_PATH_SIZE);
-        PathCchAppendEx(buffer, MAX_LONG_PATH_SIZE, APPLICATION_JRE_PATH "\\bin\\" APPLICATION_JVM_TYPE L"\\jvm.dll", PATHCCH_ALLOW_LONG_PATHS);
-        HMODULE jvm = LoadLibraryW(buffer);
-        free(buffer);
-        return jvm;
+        PathCchAppendEx(buffer, MAX_LONG_PATH_SIZE, APPLICATION_JRE_PATH "\\bin\\" APPLICATION_JVM_TYPE L"\\jvm.dll",
+                        PATHCCH_ALLOW_LONG_PATHS);
+        libjvm = LoadLibraryW(buffer);
     }
     free(buffer);
-    return NULL;
 }
 
-jint createJVM(HMODULE lib) {
-    CreateJavaVM_t createJavaVM = (CreateJavaVM_t) GetProcAddress(lib, "JNI_CreateJavaVM");
+jint createJVM() {
+    CreateJavaVM_t createJavaVM = (CreateJavaVM_t) GetProcAddress(libjvm, "JNI_CreateJavaVM");
 
     if (createJavaVM == NULL) {
         return JNI_ERR;
@@ -154,7 +150,7 @@ jobjectArray javaArguments() {
         LPWSTR arg = arguments[i];
         size_t len = wcslen(arg);
 
-        jcharArray argChars = (*env)->NewCharArray(env, len);
+        jcharArray argChars = (*env)->NewCharArray(env, (jsize) len);
         (*env)->SetCharArrayRegion(env, argChars, 0, len, (const jchar *) arg);
 
         jstring str = (*env)->CallStaticObjectMethod(env, stringCls, vf, argChars);

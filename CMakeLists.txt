@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
 
 if (NOT DEFINED APP_NAME)
     message(FATAL_ERROR "Application name has not been defined")
@@ -57,7 +57,7 @@ endif ()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
 project(launcher
-        VERSION 2.1
+        VERSION 2.2
         LANGUAGES C)
 
 include(VersionParser)
@@ -81,13 +81,20 @@ if (WIN32 AND MSVC)
             ${CMAKE_CURRENT_BINARY_DIR}/launcher.rc
             @ONLY
     )
-    add_executable(${APP_EXE_NAME} launcher_win_main.c ${CMAKE_CURRENT_BINARY_DIR}/launcher.rc ${CMAKE_CURRENT_BINARY_DIR}/launcher_config.h launcher.h launcher_win.h launcher_win.c launcher.c)
+    add_executable(${APP_EXE_NAME} launcher_win_main.c ${CMAKE_CURRENT_BINARY_DIR}/launcher.rc ${CMAKE_CURRENT_BINARY_DIR}/launcher_config.h launcher.h launcher_win.c launcher.c)
     target_link_libraries(${APP_EXE_NAME} pathcch)
     if (NOT DEFINED APP_SHOW_CONSOLE)
         set_property(TARGET ${APP_EXE_NAME} PROPERTY WIN32_EXECUTABLE true)
     else ()
         add_compile_definitions("APPLICATION_SHOW_CONSOLE")
     endif ()
-elseif ()
+elseif (UNIX)
+    add_executable(${APP_EXE_NAME}
+            ${CMAKE_CURRENT_BINARY_DIR}/launcher_config.h
+            launcher.h launcher.c launcher_linux.c launcher_linux_main.c
+            whereami/whereami.h whereami/whereami.c
+            )
+    target_link_libraries(${APP_EXE_NAME} dl)
+else ()
     message(FATAL_ERROR "Unsupported platform")
 endif ()
