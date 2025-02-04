@@ -29,13 +29,9 @@ Example:
 
 ```
 cd java-gui-launcher
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DAPP_NAME=ClassViewer -DAPP_VERSION=v3.6 -DAPP_ICON=..\ClassViewer.ico -DAPP_ORG=org.glavo -DAPP_MAIN_CLASS=org.glavo.viewer.gui.Viewer -DAPP_JRE_PATH=. -DAPP_JVM_TYPE=client ..
-cmake --build .
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DAPP_NAME=ClassViewer -DAPP_VERSION=v3 -DAPP_ICON=.\ClassViewer.ico -DAPP_ORG=org.glavo -DAPP_MAIN_CLASS=org.glavo.viewer.Main -DAPP_JRE_PATH=.\jre -DAPP_JVM_TYPE=server ..
+cmake --build build
 ```
-
-
 
 ## Build Options
 
